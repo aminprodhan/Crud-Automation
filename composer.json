@@ -1,0 +1,23 @@
+{
+    "name": "aminpciu/crudautomation",
+    "type": "library",
+    "description": "PHP crud-automation is a library that can minimize the development time for crud operation",
+    "keywords": ["php", "crud", "crud automation", "automation"],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Aminpciu\\CrudAutomation\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alamin Prodhan",
+            "role": "Developer",
+            "email": "alaminprodhancpi@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.0.1"
+    }
+}
