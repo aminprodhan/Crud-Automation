@@ -240,16 +240,17 @@
                             <div>Options <br> Data</div>
                             <div class="border_top">Query</div>
                         </th>
+                        <th scope="col">Validation</th>
                         <th scope="col">
                             <div>Field Name</div>
                             <div class="border_top">Field Type</div>
                             <div class="border_top">Length</div>
                             <div class="border_top">Default Value</div>
+                            <div class="border_top">Comments</div>
                         </th>
-                        <th scope="col">Validation</th>
+
                         <th scope="col">Index</th>
                         <th scope="col">
-                            <p class="mn">Comments</p>
                             <p class="mn border_top">Sort Id</p>
                         </th>
                     </tr>
@@ -536,6 +537,15 @@
                             </div>
                         </td>
                         <td>
+                            <input
+                                key='fields[${index}].validation'
+                                event_keyup_mouseup_handle='keyup'
+                                form_name_attr='crud_setup_form'
+                                value='${row.default_value}'
+                                id='data_validation-${index}'
+                                class='form_input_width keyboard' />
+                        </td>
+                        <td>
                             <div class='mb-1'>
                                 <input
                                     key='fields[${index}].field_name'
@@ -546,7 +556,7 @@
                                     value='${row.field_name}'
                                 />
                             </div>
-                            <div class='border_top mb-1'>
+                            <div class='d-flex flex-grow-1 border_top mb-1'>
                                 <select
                                     key='fields[${index}].field_type'
                                     event_keyup_mouseup_handle='change'
@@ -556,46 +566,36 @@
                                     ${types_options}
                                 </select>
                             </div>
-                            <div class='border_top mb-1'>
+                            <div class='d-flex flex-grow-1 border_top mb-1'>
                                 <input
                                     key='fields[${index}].data_length'
                                     event_keyup_mouseup_handle='keyup'
                                     form_name_attr='crud_setup_form'
                                     id='data_data_length-${index}'
                                     value='${row.data_length}'
-                                    class='form_input_width keyboard'
+                                    class='keyboard'
                                 />
                             </div>
-                            <div class='border_top'>
+                            <div class='d-flex flex-grow-1 border_top'>
                                 <input
                                     key='fields[${index}].default_value'
                                     event_keyup_mouseup_handle='keyup'
                                     form_name_attr='crud_setup_form'
                                     value='${row.default_value}'
                                     id='data_default_value-${index}'
-                                    class='form_input_width keyboard' />
+                                    class='keyboard' />
                             </div>
-                            <div class='border_top'>
+                            <div class='d-flex flex-grow-1 border_top'>
                                 <input
-                                    type='checkbox'
-                                    key='fields[${index}].auto_increment'
+                                    key='fields[${index}].comments'
                                     event_keyup_mouseup_handle='keyup'
                                     form_name_attr='crud_setup_form'
-                                    value='1'
-                                    value='${row.auto_increment}'
-                                    id='data_auto_increment-${index}'
-                                    class='form_input_width keyboard' ${auto_inc} /> Auto Increment
+                                    value='${row.comments}'
+                                    id='data_comments-${index}'
+                                    class='keyboard' />
                             </div>
                         </td>
-                        <td>
-                            <input
-                                key='fields[${index}].validation'
-                                event_keyup_mouseup_handle='keyup'
-                                form_name_attr='crud_setup_form'
-                                value='${row.default_value}'
-                                id='data_validation-${index}'
-                                class='form_input_width keyboard' />
-                        </td>
+
                         <td>
                             <div>
                                 <select
@@ -611,16 +611,8 @@
                             ${div_db_index_content}
                         </td>
                         <td>
-                            <div>
-                                <input
-                                    key='fields[${index}].comments'
-                                    event_keyup_mouseup_handle='keyup'
-                                    form_name_attr='crud_setup_form'
-                                    value='${row.comments}'
-                                    id='data_comments-${index}'
-                                    class='form_input_width keyboard' />
-                            </div>
-                            <div class='border_top'>
+
+                            <div class=''>
                                 <input
                                     key='fields[${index}].sort_id'
                                     event_keyup_mouseup_handle='keyup mouseup'
