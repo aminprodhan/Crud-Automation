@@ -140,6 +140,11 @@
                     'group_name' => '',
                 ],
                 [
+                    'type' => 'increments',
+                    'name' => 'Auto Increments',
+                    'group_name' => '',
+                ],
+                [
                     'type' => 'string',
                     'name' => 'varchar',
                     'group_name' => '',

@@ -52,15 +52,43 @@
                 $name = $field['name'];
                 $options = $field['options'] ?? [];
 
-                $content .= '            $table->' . $type . '(\'' . $name . '\')';
+
+                if (isset($options['index_name'])){
+                    $content .= '            $table->index(\'' . $field['name'] . '\',\'' . $options['index_name'] . '\')';
+                }
+                else if (isset($options['primary_key'])){
+                    if(isset($options['primary_key_name']))
+                        $content .= '            $table->id(\'' . $options['primary_key_name'] . '\')';
+                    else
+                        $content .= '            $table->id()';
+                }
+                else{
+                    if (isset($field['length']))
+                        $content .= '            $table->' . $type . '(\'' . $name . '\','.$field['length'].')';
+                    else
+                        $content .= '            $table->' . $type . '(\'' . $name . '\')';
+                }
 
                 if (isset($options['nullable']) && $options['nullable']) {
                     $content .= '->nullable()';
                 }
 
                 if (isset($options['default'])) {
-                    $default = is_string($options['default']) ? '\'' . $options['default'] . '\'' : $options['default'];
+                    if($options['default'] == 'true')
+                        $options['default']=true;
+
+                    else if($options['default'] == 'false')
+                        $options['default']=false;
+
+                    $default = !is_bool($options['default']) && is_string($options['default']) && !is_numeric($options['default']) ? '\'' . $options['default'] . '\'' : $options['default'];
                     $content .= '->default(' . $default . ')';
+                }
+                if (isset($options['comments'])) {
+                    $comments = '\'' . $options['default'] . '\'';
+                    $content .= '->comment(' . $comments . ')';
+                }
+                if (isset($options['unique'])) {
+                    $content .= '->unique()';
                 }
 
                 $content .= ';' . PHP_EOL;

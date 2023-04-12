@@ -47,7 +47,7 @@
             $model_path=$this->model_path;
             $model_content=$this->model_content;
 
-            dd($this->model_content);
+            //dd($this->model_content);
 
 
             // // Check if the file exists
@@ -56,12 +56,11 @@
             //     File::put($path, $content);
             //     return true;
             // }
-            if (!File::exists($model_path) && $model_content) {
-                // Create the file
-                File::put($model_path, $model_content);
-                return true;
-            }
-            return false;
+            // if (!File::exists($model_path) && $model_content) {
+            //     File::put($model_path, $model_content);
+            //     return true;
+            // }
+            return $content;
         }
 
     }
