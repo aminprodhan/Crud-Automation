@@ -1,7 +1,7 @@
 <?php
 
 namespace Aminpciu\CrudAutomation\app\Providers;
-
+use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
 use Aminpciu\CrudAutomation\app\Interfaces\CrudApiInterface;
 use Aminpciu\CrudAutomation\app\Middleware\CrudAutomationMiddleware;
 use Aminpciu\CrudAutomation\app\Repository\DynamicCrudRepository;
@@ -35,6 +35,9 @@ class DynamicCrudProvider extends ServiceProvider
             __DIR__.'/../../public' => public_path('aminpciu/crudautomation'),
         ], 'public');
         $this->app['router']->aliasMiddleware('crud-automation-middleware', CrudAutomationMiddleware::class);
+        $middlwares=CommonTrait::getCustomMiddlewares(1);
+        if(count($middlwares) > 0)
+            $this->app['router']->middlewareGroup('aminpciu-package-middleware-group', $middlwares);
         $this->app->bind(CrudApiInterface::class,DynamicCrudRepository::class);
     }
 }

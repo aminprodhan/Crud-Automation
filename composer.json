@@ -1,7 +1,7 @@
 {
     "name": "aminpciu/crudautomation",
     "type": "library",
-    "description": "Laravel crud automation is a library that can minimize the development time for crud operation",
+    "description": "Laravel crud automation is a package that can minimize the development time for crud operation",
     "keywords": ["php", "crud", "crud automation", "automation","laravel crud"],
     "license": "MIT",
     "autoload": {

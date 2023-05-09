@@ -5,11 +5,6 @@ install
 
     composer require aminpciu/crudautomation
 
-run commands to laravel project
-
-    php artisan vendor:publish --tag=public --force
-    php artisan vendor:publish --tag=config
-
 register this provider to laravel project
     go to app.php file under config folder then add this line to provider array
 
@@ -18,6 +13,17 @@ register this provider to laravel project
             'providers' => [
                 Aminpciu\CrudAutomation\app\Providers\DynamicCrudProvider::class
             ]
+
+run commands to laravel project
+
+    php artisan vendor:publish --tag=public --force
+    php artisan vendor:publish --tag=config
+    
+run two commands
+
+    composer dump-autoload
+    php artisan migrate
+
 load GUI interface
 
     APP URL/crud-auto/index
@@ -44,7 +50,7 @@ for custom mastering
         @include('lca-amin-pciu::layouts.footer_script')
         @yield('custom_script_amin_pciu_before_amin_pciu')
         @yield('custom_script_amin_pciu')
-        
+
         example:
             <body>
                 ...

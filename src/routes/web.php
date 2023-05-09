@@ -8,33 +8,22 @@ use Illuminate\Support\Facades\Schema;
 use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
 
 
-$def_middleware=['crud-automation-middleware'];
-if(Schema::hasTable('dynamic_crud_auto_configs')) {
-    $config=CommonTrait::getConfig();
-    if($config && !empty($config->middleware)){
-        $array = explode(",",$config->middleware);
-        foreach ($array as $key => $value) {
-            $def_middleware[]=$value;
-        }
-    }
-}
+$def_middleware=CommonTrait::getCustomMiddlewares();
 Route::get('config/crud-automation', [CrudSetupController::class,'config'])->name('crud-automation.aminpciu');
 Route::post('config/crud-automation', [CrudSetupController::class,'storeConfig'])->name('crud-automation.aminpciu.store');
-Route::get('crud-auto/index', [CrudSetupController::class,'index'])->middleware($def_middleware)->name('crud-automation.aminpciu.index');
-Route::post('crud-automation/aminpciu/input/truncate', [CrudSetupController::class,'truncate'])->middleware($def_middleware);
-Route::post('crud-automation/aminpciu/input/migrate-fresh', [CrudSetupController::class,'migrateFresh'])->middleware($def_middleware);
+Route::get('crud-auto/index', [CrudSetupController::class,'index'])->middleware(['aminpciu-package-middleware-group'])->name('crud-automation.aminpciu.index');
+Route::post('crud-automation/aminpciu/input/truncate', [CrudSetupController::class,'truncate'])->middleware(['aminpciu-package-middleware-group']);
+Route::post('crud-automation/aminpciu/input/migrate-fresh', [CrudSetupController::class,'migrateFresh'])->middleware(['aminpciu-package-middleware-group']);
 Route::post('crud-automation/aminpciu/crud/create', [CrudSetupController::class,'store']);
 Route::get('crud-automation/aminpciu/crud/table-columns', [CrudSetupController::class,'getTableColumns']);
 if(Schema::hasTable('dynamic_crud_settings')) {
     $rGroups=DynamicCrudSetting::get()->groupBy("middleware_name");
     foreach ($rGroups as $middleware => $value) {
-        # code...
-        //dd($rGroups);
-        //$def_middleware=['crud-automation-middleware'];
+        $def_middleware=[];
         if(!empty($middleware))
             $def_middleware[]=$middleware;
+
         $variableMainRoute=collect($value->toArray())->pluck('route_name');
-        //$variableMainRoute=DynamicCrudSetting::pluck('route_name')->toArray();
         foreach ($variableMainRoute as $key => $value) {
             Route::get(str_replace('.','/',$value).'/index', [CrudController::class,'index'])->middleware($def_middleware)->name($value.'.index');
             Route::get(str_replace('.','/',$value).'/create', [CrudController::class,'create'])->middleware($def_middleware)->name($value.'.create');
