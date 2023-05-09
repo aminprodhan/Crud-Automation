@@ -1,8 +1,10 @@
 <?php
     namespace Aminpciu\CrudAutomation\app\Helper;
+    use Aminpciu\CrudAutomation\app\Models\DynamicCrudAutoConfig;
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Schema;
     use Illuminate\Support\Facades\File;
+    use Illuminate\Support\Facades\Redirect;
 
     trait CommonTrait{
         public static function getInputTypes(){
@@ -10,6 +12,14 @@
                 [
                     'id' => 'text',
                     'name' => 'Text'
+                ],
+                [
+                    'id' => 'number',
+                    'name' => 'Number'
+                ],
+                [
+                    'id' => 'auto_code',
+                    'name' => 'Auto Code'
                 ],
                 [
                     'id' => 'password',
@@ -32,6 +42,10 @@
                     'name' => 'Radio'
                 ],
                 [
+                    'id' => 'datetime-local',
+                    'name' => 'Date Time'
+                ],
+                [
                     'id' => 'date',
                     'name' => 'Date'
                 ],
@@ -40,7 +54,7 @@
                     'name' => 'Time'
                 ],
                 [
-                    'id' => 'image/file',
+                    'id' => 'image_file',
                     'name' => 'Image/File'
                 ],
                 [
@@ -50,6 +64,10 @@
                 [
                     'id' => 'hidden',
                     'name' => 'Hidden'
+                ],
+                [
+                    'id' => 'primary_auto_inc',
+                    'name' => 'PK-Auto Increment'
                 ],
             ];
         }
@@ -146,7 +164,7 @@
                 ],
                 [
                     'type' => 'string',
-                    'name' => 'varchar',
+                    'name' => 'String',
                     'group_name' => '',
                 ],
                 [
@@ -348,6 +366,18 @@
                 ],
             ];
             return $ara;
+        }
+        public static function getEventActions(){
+            return [
+                ["name" => 'onchange',"value" => "onchange"],
+                //["name" => 'onkeyup',"value" => "onkeyup"],
+            ];
+        }
+        public static function getConfig(){
+            $config=DynamicCrudAutoConfig::first();
+            if(empty($config->id))
+                return false;
+            return $config;
         }
     }
 ?>

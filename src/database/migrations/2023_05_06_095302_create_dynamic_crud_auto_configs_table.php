@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePackageTestsTable extends Migration
+class CreateDynamicCrudAutoConfigsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreatePackageTestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('package_tests', function (Blueprint $table) {
+        Schema::create('dynamic_crud_auto_configs', function (Blueprint $table) {
             $table->id();
+            $table->string("navbar_title",255);
+            $table->string("middleware",255)->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreatePackageTestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('package_tests');
+        Schema::dropIfExists('dynamic_crud_auto_configs');
     }
 }

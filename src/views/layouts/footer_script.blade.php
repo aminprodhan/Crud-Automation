@@ -1,5 +1,7 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="{{ asset('aminpciu/crudautomation/assets/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('aminpciu/crudautomation/assets/js/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('aminpciu/crudautomation/assets/js/select2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('aminpciu/crudautomation/assets/js/bs_datatable.js') }}"></script>
 {{-- <script>
     window.addEventListener("click", function (e) {
         console.log('ee=',e);
@@ -21,28 +23,32 @@
     var form_name_id_keyboard_shorcut='';
     let timerInterval='';let b_loader_content ='';
     $(document).ready(function(){
-        select2Modal('select2_custom','modal_select2');
+        $(".bs_datatable").DataTable({
+        columnDefs: [
+            {
+                orderable: false,
+                targets: [1],
+            },
+        ],
+    });
+        select2ModalCrudAuto('select2_custom','modal_select2');
+        select2CustomCrudAuto('.select2_custom_crud_auto');
     });
-    function closeAlert(){
+    function closeAlertCrudAuto(){
         Swal.close();
     }
-    function customAlert(title,html='',loader=false){
+    function customAlertCrudAuto(init){
 
-        const init={
-            title: title,
-            html: 'I will close in <b></b> milliseconds.',
-            //timer: 2000,
-            //timerProgressBar: true,
-        };
-        if(html != '')
-            init['html']=html;
-        if(loader){
+        if(init.loader){
             init['didOpen']=() => {
                 Swal.showLoading();
             }
         }
         Swal.fire(init)
         .then((result) => {
+            if (init.confirmButtonText && result.isConfirmed) {
+                init.callback(true);
+            }
             /* Read more about handling dismissals below */
             // if (result.dismiss === Swal.DismissReason.timer) {
             //     console.log('I was closed by the timer')
@@ -91,21 +97,20 @@
     $(document).on("keypress",".keyboard",function(e){
         var code = e.keyCode ? e.keyCode : e.which;
         console.log("keypress=",code);
-        initKey($(this).attr("id"),code);
+        initKeyCrudAuto($(this).attr("id"),code);
     });
-    $(document).on("click",".keyboard option",function(e){
-        var code = e.keyCode ? e.keyCode : e.which;
-        console.log('code=',code);
-    });
-    $(document).on("keyup",".keyboard",function(e){
-        var code = e.keyCode ? e.keyCode : e.which;
+    // $(document).on("click",".keyboard option",function(e){
+    //     var code = e.keyCode ? e.keyCode : e.which;
+    //     console.log('code=',code);
+    // });
+    // $(document).on("keyup",".keyboard",function(e){
+    //     var code = e.keyCode ? e.keyCode : e.which;
+    //     if(code == 13)
+    //         return;
+    //     initKeyCrudAuto($(this).attr("id"),e.which);
+    // });
 
-        if(code == 13)
-            return;
-        initKey($(this).attr("id"),e.which);
-    });
-
-    const initKey=(input,which_key)=>{
+    const initKeyCrudAuto=(input,which_key)=>{
 
         var idSplit=input.split('-');
         console.log('split=',idSplit);
@@ -117,14 +122,14 @@
         if(keysStep != undefined){
             keysStep=keysStep['inputs'];
             //console.log('formId',keysStep);
-            handleKeyPress(rowId,which_key,classKey);
+            handleKeyPressCrudAuto(rowId,which_key,classKey);
 
         }
 
         //var classKey=$(this).attr("data-classkey");
     }
 
-    function handleKeyPress(rowId,keyCode,classKey){
+    function handleKeyPressCrudAuto(rowId,keyCode,classKey){
         let isExistKeyType=keyType.find(row => row.code == keyCode);
         let isExistKeyStep=keysStep.find(row => row.name == classKey);
         console.log('is exist=',isExistKeyType);
@@ -149,10 +154,10 @@
     // $(document).on("keyup",".keyboard",function(e){
     //     var rowId=$(this).attr("data-rowid");
     //     var classKey=$(this).attr("data-classkey");
-    //     handleKeyPress(rowId,e.which,classKey);
+    //     handleKeyPressCrudAuto(rowId,e.which,classKey);
     // });
 
-    const select2Modal = (cls, modal_name) => {
+    const select2ModalCrudAuto =(cls, modal_name) =>{
             $('.' + cls).select2({
                 dropdownParent: $("." + modal_name),
                 //allowClear: true,
@@ -160,8 +165,14 @@
                 height: '34px',
                 placeholder: 'select..'
             });
-        }
-    const getBinderLogic=(object,input,key_splited,default_value)=>{
+    }
+    const select2CustomCrudAuto =(cls, modal_name) =>{
+            $(cls).select2({
+                width: '100px',
+                placeholder: 'select..'
+            });
+    }
+    const getBinderLogicCrudAuto=(object,input,key_splited,default_value)=>{
 
         var obj_key=key_splited ?? input.attr('key');
 
@@ -188,12 +199,13 @@
             }
 
         }
-        var logic='copyObj.'+obj_key+'='+(typeof value == "number" ? value : `'${value}'`);
-
+        //value.replace(/\n/g, "\r\n");
+        var logic='copyObj.'+obj_key+'='+(typeof value == "number" ? value : `'${value.replace(/\n/g, "\r\n")}'`);
+        console.log(logic);
         //var logic='object'+obj;
         return logic;
     }
-    const handleAddRemoveLib=(index,type,data_post,callback)=>{
+    const handleAddRemoveLibCrudAuto=(index,type,data_post,callback)=>{
             if(type == 1){
                 var clone= Object.assign({}, init_obj);
                 var len=data_post.fields.length;
@@ -212,7 +224,7 @@
                 callback(data_post);
             }
         }
-    const updateBinderLib=async(index,object,value,callback)=>{
+    const updateBinderLibCrudAuto=async(index,object,value,callback)=>{
         //var obj_key=$(input);
         console.log("index=",index);
         var len=object['fields'].length;
@@ -220,9 +232,9 @@
             //const element = object['fields'][i];
             //obj_key=['fields',i,'sort_id'];
             obj_key='fields['+i+'].sort_id';
-            var logic=getBinderLogic(object,null,obj_key,(parseInt(value) + parseInt(j)));
+            var logic=getBinderLogicCrudAuto(object,null,obj_key,(parseInt(value) + parseInt(j)));
             //console.log(logic);
-            //var copyObj=await deepClone(object);
+            //var copyObj=await deepCloneCrudAuto(object);
             let copyObj = JSON.parse(JSON.stringify(object));
             eval(logic);
             object=copyObj;
@@ -231,10 +243,10 @@
         callback(object);
 
     }
-    const getCrudRow=(index,data_post,callback)=>{
+    const getCrudRowCrudAuto=(index,data_post,callback)=>{
             callback(data_post.fields[index],data_post);
     }
-    async function deepClone(obj) {
+    async function deepCloneCrudAuto(obj) {
 
 
         console.log("clone obj4=",obj);
@@ -244,14 +256,14 @@
         let clonedObj = Array.isArray(obj) ? [] : {};
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
-                clonedObj[key] = await deepClone(obj[key]);
+                clonedObj[key] = await deepCloneCrudAuto(obj[key]);
             }
         }
         //console.log("clone obj=",clonedObj);
         return clonedObj;
     }
 
-    const dataBinder = (bind_key, object, callback) => {
+    const dataBinderCrudAuto = (bind_key, object, callback) => {
             var handler=$(`[${bind_key}]`).attr(bind_key);
             //console.log("change=",handler);
             $(`[${bind_key}]`).on('keyup mouseup change', async function (event) {
@@ -260,15 +272,15 @@
                         return;
                     if(handler == 'change')
                     {
-                        initKey($(this).attr("id"),13);
+                        initKeyCrudAuto($(this).attr("id"),13);
                     }
                     var obj_key=$(this);
 
-                    var logic=getBinderLogic(object,obj_key);
-                    //console.log('logic22=',element.value);
+                    var logic=getBinderLogicCrudAuto(object,obj_key);
+                    //console.log('logic22=',logic);
 
                     let copyObj = JSON.parse(JSON.stringify(object));
-                    //var copyObj=await deepClone(object);
+                    //var copyObj=await deepCloneCrudAuto(object);
                     //console.log("copy=",object);
                     //copyObj[['fields']][1]['index_db']['index_type']='index';
                     eval(logic);
@@ -281,8 +293,14 @@
                     callback(object,element);
             })
         }
-    const ajaxCall = (url, method, data = {}, callback, callbackError) => {
-        customAlert('Loading...','<h1>Pls wait some moments</h1>',true);
+
+    const ajaxCallCrudAuto = (url, method, data = {}, callback, callbackError) => {
+        const errorAlert={
+            title:'Loading...',
+            html:`<h1>Pls wait some moments</h1>`,
+            loader:true,
+        };
+        customAlertCrudAuto(errorAlert);
         console.log(data);
         $.ajax({
             headers: {
@@ -293,11 +311,12 @@
             data: data,
             success: function (data) {
                 console.log(data);
+                closeAlertCrudAuto();
                 callback(data);
-                closeAlert();
+
             },
             error: function (error) {
-                closeAlert();
+                closeAlertCrudAuto();
                 //callSweetAlert('error', '<p class="text-danger">Something Went Wrong..!!!!</p>');
                 //console.log(data);
                 if (typeof callbackError != 'undefined') {
@@ -306,8 +325,13 @@
             }
         });
     }
-    const ajaxCallWithFormData = (url, method, formData = {}, callback, callbackError) => {
-        $('#loader').show();
+    const ajaxCallWithFormDataCrudAuto = (url, method, formData = {}, callback, callbackError) => {
+        const errorAlert={
+            title:'Loading...',
+            html:`<h1>Pls wait some moments</h1>`,
+            loader:true,
+        };
+        customAlertCrudAuto(errorAlert);
         $.ajax({
             url: url,
             method: method,
@@ -319,10 +343,12 @@
             success: function (data) {
                 console.log(data);
                 // $('#loader').hide();
+                closeAlertCrudAuto();
                 callback(data);
             },
             error: function (error) {
-                callSweetAlert('error', '<p class="text-danger">Something Went Wrong..!!!!</p>');
+                closeAlertCrudAuto();
+                //callSweetAlert('error', '<p class="text-danger">Something Went Wrong..!!!!</p>');
                 console.log(error);
                 if (typeof callbackError != 'undefined') {
                     callbackError(error);

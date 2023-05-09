@@ -7,93 +7,93 @@
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Database\Migrations\Migration;
     use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
+    use Aminpciu\CrudAutomation\app\Helper\HelperTrait;
+    use Aminpciu\CrudAutomation\app\Models\DynamicCrudFormDetail;
+    use Aminpciu\CrudAutomation\app\Models\DynamicCrudSetting;
+    use Aminpciu\CrudAutomation\app\Models\DynamicModel;
+    use Aminpciu\CrudAutomation\app\Repository\CrudRepository;
+    use Illuminate\Cache\Repository;
     use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\DB;
     use ReflectionClass;
 
     class CrudController extends Controller
     {
-        public $GenerateMigrationClass='';
-        public function __construct(GenerateMigrationClass $GenerateMigrationClass)
-        {
-            $this->GenerateMigrationClass=$GenerateMigrationClass;
+        private $crudRepository;
+        public function __construct(CrudRepository $crudRepository){
+            $this->crudRepository=$crudRepository;
+        }
+        public function index(Request $request){
+            $editable=null;
+            $info=HelperTrait::getRouteInfo($request);
+            $form_info=$info['form_info'];
+            $base_route=$info['base_route'];
+            $hasRel=HelperTrait::getRelations($form_info->formRelations);
+            $model=HelperTrait::getModelInfo($form_info);
+            $list=$this->crudRepository
+                ->setModel($model)
+                ->indexQuery($form_info)
+                ->paginate();
+            return view('lca-amin-pciu::pages.crud-list',compact('editable','base_route','form_info','list','hasRel'));
         }
         public function store(Request $request){
-
-            $db_fields =[];
-            $fields=$request->fields;
-            foreach($fields as $field){
-                if(empty($field['field_name']))
-                    continue;
-                $ara=[];
-                $ara['name']=$field['field_name'];
-                if(!empty($field['data_length']))
-                    $ara['length']=$field['data_length'];
-
-                if(!empty($field['default_value']))
-                    $ara['options']['default']=$field['default_value'];
-
-                if(!empty($field['comments']))
-                    $ara['options']['comments']=$field['comments'];
-                $index_status=0;
-                if(!empty($field['index_db']['index_type']))
-                    {
-                        if($field['index_db']['index_type'] == 'index' && !empty($field['index_db']['index_name']))
-                            $index_status=1;
-
-                        if($field['index_db']['index_type'] == 'unique')
-                            $ara['options']['unique']=true;
-                        if($field['index_db']['index_type'] == 'primary' || $ara['name'] == 'id')
-                            {
-                                $ara['options']['primary_key']=true;
-                                if($ara['name'] != 'id')
-                                    $ara['options']['primary_key_name']=$ara['name'];
-                            }
-                    }
-                //$table->id('user_id')
-                $ara['type']=$field['field_type'];
-                array_push($db_fields,$ara);
-                if($index_status){
-                    $ara=[];
-                    $ara['type']='';
-                    $ara['name']=$field['field_name'];
-                    $ara['options']['index_name']=$field['index_db']['index_name'];
-                    array_push($db_fields,$ara);
-                }
-
-            }
-            $init_params=[
-                'model_name' => "Test/Hello/ProductInfo", //default-> (app/Models)
-                'table_name' => 'products',
-                'migration_path' => '', //database_path('migrations/your_desire_folder_name')
-                'fields' => $db_fields
-            ];
-            $res=$this->GenerateMigrationClass
-                ->init($init_params)
-                ->makeMigration()
-                ->makeModel()->create();
-            dd($res);
+            $info=HelperTrait::getRouteInfo($request);
+            $form_info=$info['form_info'];
+            $model=HelperTrait::getModelInfo($form_info);
+            $res=$this->crudRepository->setModel($model)->store();
+            return response()->json($res['message'],$res['status_code']);
         }
-        public function index(){
-            $tables=CommonTrait::getDBTables();
-            $db_index_types=CommonTrait::getDBIndexTypes();
-            //dd($tables);
-            $input_types=CommonTrait::getInputTypes();
-            $display_types=CommonTrait::getDisplayTypes();
-            $data_types=CommonTrait::getTableColDataTypes();
-            return view('lca-amin-pciu::index',compact('db_index_types','data_types','input_types','display_types','tables'));
+        public function create(Request $request){
+            //dd(HelperTrait::generateAutoCode());
+            $info=HelperTrait::getRouteInfo($request);
+            $form_info=$info['form_info'];
+            $routeIndex=$info['base_route'];
+            $editable=null;
+            return view('lca-amin-pciu::pages.crud-create',compact('editable','routeIndex','form_info'));
         }
-        public function getTableColumns(Request $request){
-
-            $columns=CommonTrait::getDBTableColumns($request->table_name);
-            $res['cols']=[];
-            foreach($columns as $key => $col){
-                $new_string = ucwords(str_replace(array('_', '-'), ' ', $col));
-                $array=[];
-                $array['field_name']=$col;
-                $array['label_name']=$new_string;
-                array_push($res['cols'],$array);
+        public function findById(Request $request){
+            $reqId=$request->id;
+            $info=HelperTrait::getRouteInfo($request);
+            $form_info=$info['form_info'];
+            $routeIndex=$info['base_route'];
+            $model=HelperTrait::getModelInfo($form_info);
+            $query = $model::query();
+            $editable=$query->find($reqId);
+            //dd($editable->name);
+            //dd($query->find($reqId));
+            return view('lca-amin-pciu::pages.crud-create',compact('editable','routeIndex','form_info'));
+            //dd($info);
+        }
+        public function handleFileRemove(Request $request){
+            $reqId=$request->id;
+            $colname=$request->colName;
+            $info=HelperTrait::getRouteInfo($request);
+            $form_info=$info['form_info'];
+            $routeIndex=$info['base_route'];
+            $model=HelperTrait::getModelInfo($form_info);
+            $query = $model::query();
+            $editable=$query->find($reqId);
+            $form_propertise=$form_info->form_details->where("field_name",$request->colName)->first();
+            $file_location=$form_propertise->db_info->file_location ?? '';
+            $files=(json_decode($editable->$colname));
+            $filterFiles = array_filter($files, function ($var) use($request){
+                return ($var != $request->fileName);
+            });
+            $coll=json_encode(collect($filterFiles)->flatten(1));
+            $editable->$colname=$coll;
+            $editable->save();
+            if (File::exists(public_path($file_location.'/'.$request->fileName))) {
+                File::delete(public_path($file_location.'/'.$request->fileName));
             }
-            $res['info']=CommonTrait::getModelInfoFromTable($request->table_name);
-            return response()->json($res);
+            return response()->json("Success",200);
+        }
+        public function delete(Request $request){
+            $info=HelperTrait::getRouteInfo($request);
+            $form_info=$info['form_info'];
+            $model=HelperTrait::getModelInfo($form_info);
+            $res=$this->crudRepository
+                ->setModel($model)
+                ->delete($request->id);
+            return response()->json("Success",200);
         }
     }
