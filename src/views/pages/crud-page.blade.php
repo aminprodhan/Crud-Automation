@@ -27,6 +27,7 @@
                                 <td class="table-light">
                                     Actions
                                 </td>
+                                <td class="table-secondary">Form Id</td>
                                 <td class="table-secondary">Form Name</td>
                                 <td class="table-success">Table Name</td>
                                 <td class="table-danger">Route Name</td>
@@ -48,6 +49,7 @@
                                                 onclick="handleTruncateCrudAuto({{$item->id}})"
                                                 class="btn btn-danger btn-sm">Truncate</button>
                                         </td>
+                                        <td>{{$item['id']}}</td>
                                         <td>{{$item['form_name']}}</td>
                                         <td>{{$item['table_name']}}</td>
                                         <td>
