@@ -550,6 +550,7 @@
                             <div class="d-flex flex-grow-1 me-1">
                                 <textarea
                                     rows="6"
+                                    placeholder="[['name'=>'Active','status'=>1],['name'=>'Inactive','status'=>1]]"
                                     key='db.init_data'
                                     id="db_init_data-0"
                                     class="form-control"></textarea>
