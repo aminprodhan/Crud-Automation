@@ -381,14 +381,14 @@
             return $config;
         }
         public static function getCustomMiddlewares($all=null){
-            $def_middleware=['crud-automation-middleware'];
+            $def_middleware=[];
             if(Schema::hasTable('dynamic_crud_auto_configs')) {
                 $def_middleware=['crud-automation-middleware'];
                 $config=CommonTrait::getConfig();
                 if($config && !empty($config->middleware)){
                     $array = explode(",",$config->middleware);
                     foreach ($array as $key => $value) {
-                        $def_middleware[]=$value;
+                            $def_middleware[]=$value;
                     }
                 }
             }

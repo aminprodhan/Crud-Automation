@@ -5,8 +5,9 @@ use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
 use Aminpciu\CrudAutomation\app\Interfaces\CrudApiInterface;
 use Aminpciu\CrudAutomation\app\Middleware\CrudAutomationMiddleware;
 use Aminpciu\CrudAutomation\app\Repository\DynamicCrudRepository;
+use Illuminate\Auth\AuthServiceProvider;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Support\Facades\Auth;
 class DynamicCrudProvider extends ServiceProvider
 {
     /**
@@ -16,7 +17,7 @@ class DynamicCrudProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**
@@ -26,6 +27,9 @@ class DynamicCrudProvider extends ServiceProvider
      */
     public function boot()
     {
+
+
+
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
         $this->loadViewsFrom(__DIR__.'/../../views', 'lca-amin-pciu');
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
@@ -36,8 +40,10 @@ class DynamicCrudProvider extends ServiceProvider
         ], 'public');
         $this->app['router']->aliasMiddleware('crud-automation-middleware', CrudAutomationMiddleware::class);
         $middlwares=CommonTrait::getCustomMiddlewares(1);
-        if(count($middlwares) > 0)
-            $this->app['router']->middlewareGroup('aminpciu-package-middleware-group', $middlwares);
+        //$middlwares[]=[\Illuminate\Auth\Middleware\Authenticate::class,\App\Http\Middleware\PermissionCheck::class];
+        $this->app['router']->middlewareGroup('aminpciu-package-middleware-group', $middlwares);
+        // if(count($middlwares) > 0)
+        //     $this->app['router']->middlewareGroup('aminpciu-package-middleware-group', $middlwares);
         $this->app->bind(CrudApiInterface::class,DynamicCrudRepository::class);
     }
 }

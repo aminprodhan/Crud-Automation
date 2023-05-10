@@ -159,10 +159,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="display: none">
                         <div class="col-12">
                             <div class="input-group mb-1">
-
                                 <span class="input-group-text form_label_width" id="basic-addon1">
                                     <span class="form_label_required">*</span> Route Name
                                 </span>
