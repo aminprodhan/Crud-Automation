@@ -16,6 +16,7 @@ class CreateDynamicCrudAutoConfigsTable extends Migration
         Schema::create('dynamic_crud_auto_configs', function (Blueprint $table) {
             $table->id();
             $table->string("navbar_title",255);
+            $table->string("master_blade",100)->nullable();
             $table->string("middleware",255)->nullable();
             $table->timestamps();
         });

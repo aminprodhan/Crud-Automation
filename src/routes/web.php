@@ -35,4 +35,3 @@ if(Schema::hasTable('dynamic_crud_settings')) {
     }
 }
 
-

@@ -1,4 +1,9 @@
-@extends('lca-amin-pciu::index')
+
+<?php
+    use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
+    $bladeName=CommonTrait::getBladeInfo();
+?>
+@extends($bladeName)
 @section('title','Dynamic Crud Config')
 @section ('content_page_amin_pciu')
 @include('lca-amin-pciu::styles.common')
@@ -31,6 +36,18 @@
                                             name="navbar_title"
                                             placeholder="Navbar Title"
                                             value="<?=$config->navbar_title ?? '' ?>"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-10 col-lg-10">
+                                    <div class="input-group mb-1">
+                                        <span class="input-group-text form_label_width">
+                                            Master Blade(Extends Name)
+                                        </span>
+                                        <input
+                                            name="master_blade"
+                                            placeholder="Master Blade"
+                                            value="<?=$config->master_blade ?? '' ?>"
                                             class="form-control" />
                                     </div>
                                 </div>

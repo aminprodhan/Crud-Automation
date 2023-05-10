@@ -1,7 +1,11 @@
-@extends('lca-amin-pciu::index')
+<?php
+    use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
+    use Aminpciu\CrudAutomation\app\Helper\HelperTrait;
+    $bladeName=CommonTrait::getBladeInfo();
+?>
+@extends($bladeName)
 @section('title',$form_info->form_name)
 @section ('content_page_amin_pciu')
-    <?php use Aminpciu\CrudAutomation\app\Helper\HelperTrait; ?>
     @include('lca-amin-pciu::styles.common')
     <style>
         {!!  strip_tags($form_info->style_custom->css ?? '') !!}

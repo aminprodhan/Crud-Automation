@@ -1,4 +1,10 @@
-@extends('lca-amin-pciu::index')
+
+<?php
+    use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
+    use Aminpciu\CrudAutomation\app\Helper\HelperTrait;
+    $bladeName=CommonTrait::getBladeInfo();
+?>
+@extends($bladeName)
 @section('title','Crud')
 @section ('content_page_amin_pciu')
     <div class="mt-2">

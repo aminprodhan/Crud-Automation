@@ -1,8 +1,8 @@
 <?php
     namespace Aminpciu\CrudAutomation\app\Helper;
     use Aminpciu\CrudAutomation\app\Models\DynamicCrudAutoConfig;
-use Aminpciu\CrudAutomation\app\Models\DynamicCrudSetting;
-use Illuminate\Support\Facades\DB;
+    use Aminpciu\CrudAutomation\app\Models\DynamicCrudSetting;
+    use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Schema;
     use Illuminate\Support\Facades\File;
     use Illuminate\Support\Facades\Redirect;
@@ -380,9 +380,8 @@ use Illuminate\Support\Facades\DB;
                 return false;
             return $config;
         }
-
         public static function getCustomMiddlewares($all=null){
-            $def_middleware=[];
+            $def_middleware=['crud-automation-middleware'];
             if(Schema::hasTable('dynamic_crud_auto_configs')) {
                 $def_middleware=['crud-automation-middleware'];
                 $config=CommonTrait::getConfig();
@@ -393,16 +392,23 @@ use Illuminate\Support\Facades\DB;
                     }
                 }
             }
-            if(!empty($all)){
-                if(Schema::hasTable('dynamic_crud_settings')) {
-                    $rGroups=DynamicCrudSetting::get()->groupBy("middleware_name");
-                    foreach ($rGroups as $middleware => $value) {
-                        if(!empty($middleware))
-                            $def_middleware[]=$middleware;
-                    }
-                }
-            }
+            // if(!empty($all)){
+            //     if(Schema::hasTable('dynamic_crud_settings')) {
+            //         $rGroups=DynamicCrudSetting::get()->groupBy("middleware_name");
+            //         foreach ($rGroups as $middleware => $value) {
+            //             if(!empty($middleware))
+            //                 $def_middleware[]=$middleware;
+            //         }
+            //     }
+            // }
             return $def_middleware;
+        }
+        public static function getBladeInfo(){
+            $def='lca-amin-pciu::index';
+            $config=self::getConfig();
+            if(!empty($config->master_blade))
+                $def=$config->master_blade;
+            return $def;
         }
     }
 ?>

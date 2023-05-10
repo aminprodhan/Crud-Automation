@@ -1,11 +1,16 @@
-@extends('lca-amin-pciu::index')
+
+<?php
+    use Aminpciu\CrudAutomation\app\Helper\CommonTrait;
+    use Aminpciu\CrudAutomation\app\Helper\HelperTrait;
+    $bladeName=CommonTrait::getBladeInfo();
+?>
+@extends($bladeName)
 @section('title','Crud')
 @section ('content_page_amin_pciu')
     @include('lca-amin-pciu::styles.common')
     <style>
         {!!  strip_tags($form_info->style_custom->css_index ?? '') !!}
     </style>
-    <?php use Aminpciu\CrudAutomation\app\Helper\HelperTrait; ?>
     @php
         $form_class=str_replace(' ','_',$form_info->form_name);
         $col_per_row=6;

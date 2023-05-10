@@ -19,6 +19,7 @@ class CrudConfigRepository extends BaseRepository implements CrudConfigInterface
             [
                 "navbar_title" => $request->navbar_title,
                 "middleware" => $request->middleware_name,
+                "master_blade" => $request->master_blade,
             ]
         );
         return 1;
