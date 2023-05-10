@@ -10,6 +10,8 @@ use Aminpciu\CrudAutomation\app\Models\DynamicCrudFormDetail;
 use Aminpciu\CrudAutomation\app\Models\DynamicCrudSetting;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
 class CrudInputRepository extends BaseRepository implements CrudInputInterface{
     public $GenerateMigrationClass='';
     public function __construct(GenerateMigrationClass $GenerateMigrationClass)
@@ -118,12 +120,6 @@ class CrudInputRepository extends BaseRepository implements CrudInputInterface{
                 }
                 DynamicCrudFormDetail::where("dynamic_crud_settings_id",$lastRecordId)->where("status",2)->delete();
                 DB::commit();
-                if(!empty($migrateStatus)){
-                    Artisan::call('migrate', [
-                        '--path' => $this->GenerateMigrationClass->migratePath,
-                    ]);
-                }
-
                 if(!empty($req_data["db"]["init_data"])){
                     $array_data = eval('return '.$req_data["db"]["init_data"].';');
                     dispatch(new InitialDataImport($array_data,$req_data['table_name']));
@@ -134,6 +130,13 @@ class CrudInputRepository extends BaseRepository implements CrudInputInterface{
                 DB::rollBack();
                 $res['message']=($error->getMessage());
                 $res['status_code']=500;
+            }
+            if(!empty($migrateStatus)){
+                //if(Schema::hasTable($req_data['table_name'])) {
+                Artisan::call('migrate', [
+                    '--path' => $this->GenerateMigrationClass->migratePath,
+                ]);
+                //}
             }
         return $res;
     }

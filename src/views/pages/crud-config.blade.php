@@ -46,7 +46,7 @@
                                         </span>
                                         <input
                                             name="master_blade"
-                                            placeholder="Master Blade"
+                                            placeholder="admin.layout.master"
                                             value="<?=$config->master_blade ?? '' ?>"
                                             class="form-control" />
                                     </div>

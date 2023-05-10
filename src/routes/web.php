@@ -19,10 +19,6 @@ Route::get('crud-automation/aminpciu/crud/table-columns', [CrudSetupController::
 if(Schema::hasTable('dynamic_crud_settings')) {
     $rGroups=DynamicCrudSetting::get()->groupBy("middleware_name");
     foreach ($rGroups as $middleware => $value) {
-        $def_middleware=[];
-        //if(!empty($middleware))
-            //$def_middleware[]=$middleware;
-
         $variableMainRoute=collect($value->toArray())->pluck('route_name');
         foreach ($variableMainRoute as $key => $value) {
             Route::get(str_replace('.','/',$value).'/index', [CrudController::class,'index'])->middleware($def_middleware)->name($value.'.index');

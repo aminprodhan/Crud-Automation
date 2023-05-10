@@ -4,6 +4,7 @@
     use Aminpciu\CrudAutomation\app\Lib\Migrate;
     use Aminpciu\CrudAutomation\app\Models\DynamicCrudSetting;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
     class GenerateMigrationClass extends Migrate{
@@ -67,7 +68,9 @@ use Illuminate\Support\Facades\Storage;
             }
             else{
                 if(!empty($migration_status)){
-                    File::put($path, $content);
+                    if(!Schema::hasTable($this->table_name)) {
+                        File::put($path, $content);
+                    }
                 }
             }
             return 1;
