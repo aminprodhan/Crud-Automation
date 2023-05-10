@@ -30,7 +30,19 @@ load GUI interface
     example:
         http://localhost:8000/crud-auto/index
 
+for secure routing
+
+    add middleware name to dynamic_crud_auto_configs table        
+
 for custom mastering
+
+    update (master_blade) column value by your master blade name from dynamic_crud_auto_configs table
+
+    or empty dynamic_crud_auto_configs table then reload and add middleware name and save
+    
+    example:
+        master blade name means like 
+            @extends('admin.layout.master')
 
     add two lines in <head>
 
@@ -45,6 +57,7 @@ for custom mastering
             </head>
 
     add these lines
+
         @include('lca-amin-pciu::layouts.navbar')
         @yield('content_page_amin_pciu')
         @include('lca-amin-pciu::layouts.footer_script')
@@ -62,4 +75,11 @@ for custom mastering
                 @yield('custom_script_amin_pciu_before_amin_pciu')
                 @yield('custom_script_amin_pciu')
             </body>
+
+  for reset all data
+  
+        empty these three table data
+
+       dynamic_crud_auto_configs,dynamic_crud_form_details,dynamic_crud_settings
+       
     
